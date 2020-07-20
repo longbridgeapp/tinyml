@@ -2,6 +2,8 @@
 
 LongBridge Plain Text format.
 
+[![Build Status](https://travis-ci.org/long-bridge/tinyml.svg?branch=master)](https://travis-ci.org/long-bridge/tinyml)
+
 ## Usage
 
 ```go
