@@ -29,7 +29,7 @@ func TestToText(t *testing.T) {
 
 func BenchmarkToText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		// about 0.02/op
+		// about 0.02ms/op
 		ToText("消息称[st]ST/US/BABA#阿里巴巴.US[/st]将于5月，在港股上市。")
 	}
 }
