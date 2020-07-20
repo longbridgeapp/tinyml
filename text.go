@@ -58,7 +58,8 @@ func ToText(raw string) (out string, err error) {
 			continue
 		}
 
-		if _, err := w.Write(data); err != nil {
+		val := bytes.Trim(data, " ")
+		if _, err := w.Write(val); err != nil {
 			return out, err
 		}
 

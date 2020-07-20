@@ -9,7 +9,7 @@ import (
 	autocorrect "github.com/huacnlee/go-auto-correct"
 )
 
-// ToText parse TinyML format to HTML
+// ToHTML parse TinyML format to HTML
 func ToHTML(raw string) (out string, err error) {
 	w := &bytes.Buffer{}
 	l := NewLexer(bytes.NewBufferString(raw))
@@ -68,7 +68,8 @@ func ToHTML(raw string) (out string, err error) {
 			continue
 		}
 
-		if _, err := w.Write(data); err != nil {
+		val := bytes.Trim(data, " ")
+		if _, err := w.Write(val); err != nil {
 			return out, err
 		}
 	}
