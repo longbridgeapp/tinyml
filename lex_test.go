@@ -19,7 +19,8 @@ func TestTokens(t *testing.T) {
 		{"Hello world", TTs{TextToken}, []string{"Hello world"}},
 		{"Hello world\n\nThis new next line", TTs{TextToken, NewLineToken, TextToken}, []string{"Hello world", "\n\n", "This new next line"}},
 		{"\nHello world\n\nThis is new line", TTs{NewLineToken, TextToken, NewLineToken, TextToken}, []string{"\n", "Hello world", "\n\n", "This is new line"}},
-		// {"==== Hello World ====", TTs{Heading2StartToken, TextToken}, []string{"==== ", "Hello World", " ===="}},
+		{"传言[st]ST/US/BABA#阿里巴巴.US[/st]将在港股上市", TTs{TextToken, StartTagToken, TextToken, EndTagToken, TextToken}, []string{"传言", "[st]", "ST/US/BABA#阿里巴巴.US", "[/st]", "将在港股上市"}},
+		{"[ST]ST/US/BABA#阿里巴巴.US[/st] 将在港股上市", TTs{StartTagToken, TextToken, EndTagToken, TextToken}, []string{"[st]", "ST/US/BABA#阿里巴巴.US", "[/st]", " 将在港股上市"}},
 	}
 
 	for _, tt := range tokenTests {
@@ -37,7 +38,6 @@ func TestTokens(t *testing.T) {
 				}
 
 				tokens = append(tokens, token)
-				// fmt.Printf("-- %q\n", string(data))
 				lexemes = append(lexemes, string(data))
 				i++
 			}

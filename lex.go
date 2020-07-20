@@ -80,6 +80,8 @@ func (l *Lexer) Next() (TokenType, []byte) {
 		for l.cunsumeNewLine() {
 		}
 		return NewLineToken, l.r.Shift()
+	case '[':
+		return l.shiftTag()
 	default:
 		if l.cunsumeText() {
 			return TextToken, l.r.Shift()
@@ -93,15 +95,6 @@ func (l *Lexer) Next() (TokenType, []byte) {
 	return UnknownToken, nil
 }
 
-func (l *Lexer) moveWhitespace() {
-	for {
-		if c := l.r.Peek(0); c == 0 || c == '\n' || c == '\r' || c == '\t' || c == '[' {
-			break
-		}
-		l.r.Move(1)
-	}
-}
-
 func (l *Lexer) cunsumeNewLine() bool {
 	c := l.r.Peek(0)
 	if c == '\n' {
@@ -112,7 +105,8 @@ func (l *Lexer) cunsumeNewLine() bool {
 }
 
 func (l *Lexer) cunsumeText() bool {
-	if l.r.Peek(0) == 0 || l.r.Peek(0) == '\n' || l.r.Peek(0) == '[' {
+	c := l.r.Peek(0)
+	if c == 0 || c == '\n' || c == '[' {
 		return false
 	}
 
@@ -130,41 +124,26 @@ func (l *Lexer) cunsumeText() bool {
 	return true
 }
 
-func (l *Lexer) shiftStartTag() (TokenType, []byte) {
+func (l *Lexer) shiftTag() (TokenType, []byte) {
 	for {
+		c := l.r.Peek(0)
 		// loop to read end with tag
-		if c := l.r.Peek(0); c == ' ' || c == ']' || c == '/' && l.r.Peek(1) == ']' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == 0 && l.r.Err() != nil {
+		if c == ' ' || c == '/' && l.r.Peek(1) == ']' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == 0 && l.r.Err() != nil {
 			break
 		}
 		l.r.Move(1)
+
+		if c == ']' {
+			break
+		}
 	}
 
 	l.text = parse.ToLower(l.r.Lexeme()[1:])
+	if l.inTag {
+		l.inTag = false
+		return EndTagToken, l.r.Shift()
+	}
+
+	l.inTag = true
 	return StartTagToken, l.r.Shift()
-}
-
-func (l *Lexer) shiftEndTag() []byte {
-	for {
-		c := l.r.Peek(0)
-		if c == ']' {
-			l.text = l.r.Lexeme()[2:]
-			l.r.Move(1)
-			break
-		} else if c == 0 && l.r.Err() != nil {
-			l.text = l.r.Lexeme()[2:]
-			break
-		}
-		l.r.Move(1)
-	}
-
-	end := len(l.text)
-	for end > 0 {
-		if c := l.text[end-1]; c == ' ' || c == '\t' || c == '\n' || c == '\r' {
-			end--
-			continue
-		}
-		break
-	}
-	l.text = l.text[:end]
-	return l.r.Shift()
 }
