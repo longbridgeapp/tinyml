@@ -27,6 +27,7 @@ func ToHTML(raw string) (out string, err error) {
 
 				w := &bytes.Buffer{}
 				for _, p := range paragraphs {
+					// p = strings.ReplaceAll(p, "\n", "<br />")
 					w.WriteString("<p>" + strings.TrimSpace(p) + "</p>")
 				}
 
@@ -36,6 +37,9 @@ func ToHTML(raw string) (out string, err error) {
 				}
 				return out, nil
 			}
+		case BreakLineToken:
+			w.Write([]byte("<br />"))
+			continue
 		case StartTagToken:
 			tag := string(data)
 			if tag == "[st]" {

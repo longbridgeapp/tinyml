@@ -13,6 +13,7 @@ const (
 	ErrorToken TokenType = iota
 	UnknownToken
 	NewLineToken
+	BreakLineToken
 	StartTagToken
 	EndTagToken
 	SecurityTagToken
@@ -33,6 +34,8 @@ func (tt TokenType) String() string {
 		return "SecurityTag"
 	case NewLineToken:
 		return "NewLine"
+	case BreakLineToken:
+		return "BreakLine"
 	case TextToken:
 		return "Text"
 	}
@@ -77,9 +80,11 @@ func (l *Lexer) Next() (TokenType, []byte) {
 	switch c {
 	case '\n':
 		l.r.Move(1)
-		for l.cunsumeNewLine() {
+		if l.cunsumeNewLine() {
+			return NewLineToken, l.r.Shift()
+		} else {
+			return BreakLineToken, l.r.Shift()
 		}
-		return NewLineToken, l.r.Shift()
 	case '[':
 		return l.shiftTag()
 	default:
