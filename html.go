@@ -6,7 +6,7 @@ import (
 	"io"
 	"strings"
 
-	autocorrect "github.com/huacnlee/go-auto-correct"
+	autocorrect "github.com/longbridgeapp/autocorrect"
 )
 
 // ToHTML parse TinyML format to HTML

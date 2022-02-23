@@ -3,7 +3,7 @@ package tinyml
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/longbridgeapp/assert"
 )
 
 func Test_parseSecurityTag(t *testing.T) {

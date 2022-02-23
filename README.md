@@ -12,11 +12,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/long-bridge/tinyml"
+	"github.com/longbridgeapp/tinyml"
 )
 
 func main() {
-        out, _ := tinyml.ToText("消息称[st]ST/US/BABA#阿里巴巴.US[/st]将于5月，在港股上市。")
+	out, _ := tinyml.ToText("消息称[st]ST/US/BABA#阿里巴巴.US[/st]将于5月，在港股上市。")
 	fmt.Println(out)
 	// 消息称 阿里巴巴.US 将于 5 月，在港股上市。
 
